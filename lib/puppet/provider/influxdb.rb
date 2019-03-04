@@ -122,6 +122,45 @@ class Puppet::Provider::InfluxDB < Puppet::Provider
     ret = values.collect do |value|
       value[0]
     end
+    Puppet.debug("self.database is returning #{ret}")
+    ret
+  end
+
+  def self.users
+    q = 'SHOW USERS'
+    retry_count = 1
+    begin
+      response = query(q)
+      if response.code.to_i != 200
+        raise Puppet::Error, "Failed to get InfluxDB Users (HTTP response: #{response.code})"
+      end
+      data = JSON.parse(response.body)
+      results = data['results'][0]
+      series = results['series']
+      if !series[0].include?('columns')
+        raise Puppet::Error, 'InfluxDB database response did not contain columns, service not started or initialized yet'
+      end
+      if !series[0].include?('values')
+        Puppet.debug("InfluxDB database does not contain any user")
+        values = []
+      else
+        values = series[0]['values']
+      end
+    rescue => e
+      if retry_count <= 30
+        Puppet.debug("InfluxDB database: #{e.message}, retrying in #{retry_count} seconds")
+        retry_count += 1
+        Kernel.sleep 2
+        retry
+      end
+      raise
+    end
+    ret = values.collect do |value, admin|
+      # Right now only user names are managed
+      Puppet.debug("Got existing user #{value} with admin => #{admin} from DB")
+      value
+    end
+    Puppet.debug("self.users is returning #{ret}")
     ret
   end
 
