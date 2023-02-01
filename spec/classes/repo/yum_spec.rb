@@ -23,7 +23,7 @@ describe 'influxdb::repo::yum' do
                                                                       baseurl: "https://repos.influxdata.com/#{_operatingsystem}/\$releasever/\$basearch/stable",
                                                                       enabled: 1,
                                                                       gpgcheck: 1,
-                                                                      gpgkey: 'https://repos.influxdata.com/influxdb.key')
+                                                                      gpgkey: 'https://repos.influxdata.com/influxdata-archive_compat.key')
         end
 
         it { is_expected.to contain_class('influxdb::repo::yum') }

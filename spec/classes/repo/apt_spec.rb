@@ -13,8 +13,8 @@ describe 'influxdb::repo::apt' do
 
         let(:key) do
           {
-            'id'     => '05CE15085FC09D18E99EFB22684A14CF2582E0C5',
-            'source' => 'https://repos.influxdata.com/influxdb.key'
+            'id'     => '9D539D90D3328DC7D6C8D3B9D8FF8E1F7DF8B07E',
+            'source' => 'https://repos.influxdata.com/influxdata-archive_compat.key'
           }
         end
 

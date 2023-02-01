@@ -16,7 +16,7 @@ class influxdb::repo::yum(
     baseurl  => "https://repos.influxdata.com/${$_operatingsystem}/\$releasever/\$basearch/stable",
     enabled  => $enabled,
     gpgcheck => $gpgcheck,
-    gpgkey   => 'https://repos.influxdata.com/influxdb.key',
+    gpgkey   => 'https://repos.influxdata.com/influxdata-archive_compat.key',
   }
 
 }
