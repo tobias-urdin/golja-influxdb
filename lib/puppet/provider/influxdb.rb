@@ -42,8 +42,9 @@ class Puppet::Provider::InfluxDB < Puppet::Provider
   def self.parse_url(path, query=nil)
     url = URI.parse(base_url)
     path.prepend('/') unless path[0] == '/'
-    url.path = URI.escape(path)
-    url.query = URI.escape(query) if query
+    p = URI::Parser.new
+    url.path = p.escape(path)
+    url.query = p.escape(query) if query
     url
   end
 
