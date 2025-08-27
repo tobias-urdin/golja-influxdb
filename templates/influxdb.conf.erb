@@ -1,8 +1,6 @@
 # This config file is managed by Puppet
 <%-
   def value_parser(v)
-    return v if v =~ /^[\d]+$/
-
     return v if v.is_a?(Integer)
 
     return v if v.is_a?(TrueClass)
@@ -12,6 +10,8 @@
     return v if v.is_a?(Float)
 
     return v if v.is_a?(Array)
+
+    return v if v =~ /^[\d]+$/
 
     # if we get here just return a string
     return "\"#{v}\""
