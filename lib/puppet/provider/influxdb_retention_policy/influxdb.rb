@@ -95,8 +95,11 @@ Puppet::Type.type(:influxdb_retention_policy).provide(:influxdb, :parent => Pupp
     data = JSON.parse(response.body)
     results = data['results'][0]
     series = results['series']
-    values = series[0]['values']
-    values
+    columns = series[0]['columns']
+    values  = series[0]['values']
+    values.map do |row|
+      Hash[columns.zip(row)]
+    end
   end
 
   # @method duration
@@ -127,14 +130,11 @@ Puppet::Type.type(:influxdb_retention_policy).provide(:influxdb, :parent => Pupp
     dbs.each do |db|
       rps = self.retention_policies(db) 
       ret << rps.collect do |rp|
-        default_sym = :false
-        if rp[4].to_s == 'true'
-          default_sym = :true
-        end
+        default_sym = rp['default'] ? :true : :false
         new(
-          :name        => "#{rp[0]}@#{db}",
-          :duration    => self.duration_to_seconds(rp[1]),
-          :replication => rp[3],
+          :name        => "#{rp['name']}@#{db}",
+          :duration    => self.duration_to_seconds(rp['duration']),
+          :replication => rp['replicaN'],
           :default     => default_sym,
         )
       end
